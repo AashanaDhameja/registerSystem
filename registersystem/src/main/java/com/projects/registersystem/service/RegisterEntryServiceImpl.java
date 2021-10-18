@@ -28,7 +28,7 @@ public class RegisterEntryServiceImpl implements RegisterEntryService{
 	}
 
 	@Override
-	public void personEnter(Person person, String date) {
+	public String personEnter(Person person, String date) {
 		
 		
 		RegisterEntry entry = registerRepository.getRegisterEntryByVisitorId(person.getId());
@@ -38,9 +38,11 @@ public class RegisterEntryServiceImpl implements RegisterEntryService{
 				entry.setDate(date);
 				save(entry);
 				//Add message to page
+				return "Person entered the society";
 			}
 			else {
-				Notification.show("You are already inside the society.", Notification.Type.ERROR_MESSAGE);
+				return "Person is already inside the society";
+				//Notification.show("You are already inside the society.", Notification.Type.ERROR_MESSAGE);
 			}
 		}
 		else {
@@ -50,12 +52,13 @@ public class RegisterEntryServiceImpl implements RegisterEntryService{
 			newEntry.setMovement("Enter");
 			save(newEntry);
 			//Add message to page
+			return "Person entered the society";
 		}
 		
 	}
 
 	@Override
-	public void personLeave(Person person, String date) {
+	public String personLeave(Person person, String date) {
 		RegisterEntry entry = registerRepository.getRegisterEntryByVisitorId(person.getId());
 		if(entry != null) {
 			if(entry.getMovement().toLowerCase().equals("enter")) {
@@ -63,13 +66,16 @@ public class RegisterEntryServiceImpl implements RegisterEntryService{
 				entry.setMovement("Leave");
 				save(entry);
 				//Add message to page
+				return "Person left the society";
 			}
 			else {
-				Notification.show("You have already left the society", Notification.Type.ERROR_MESSAGE);
+				return "Person has already left the society";
+				//Notification.show("You have already left the society", Notification.Type.ERROR_MESSAGE);
 			}
 		}
 		else {
-			Notification.show("You cannot leave society without entering.", Notification.Type.ERROR_MESSAGE);
+			return "Person cannot leave the society before entering";
+			//Notification.show("You cannot leave society without entering.", Notification.Type.ERROR_MESSAGE);
 		}
 		
 	}
